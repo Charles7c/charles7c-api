@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.5</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>top.charles7c</groupId>
+    <artifactId>charles7c-api</artifactId>
+    <version>1.0.0</version>
+
+    <name>charles7c-api</name>
+    <description>charles7c-api</description>
+
+    <properties>
+        <!-- ### 持久层相关 ### -->
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <dynamic-ds.version>3.5.2</dynamic-ds.version>
+        <p6spy.version>3.9.1</p6spy.version>
+
+        <!-- ### 工具库相关 ###  -->
+        <ip2region.version>2.6.0</ip2region.version>
+        <spring-doc.version>1.6.12</spring-doc.version>
+        <knife4j.version>3.0.3</knife4j.version>
+        <hutool.version>5.8.4</hutool.version>
+        <lombok.version>1.18.24</lombok.version>
+
+        <!-- ### 基础环境相关 ### -->
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- ################ Spring Boot 相关 ################ -->
+        <!-- Spring Boot Web（提供 Spring MVC Web 开发能力，已经移除了内置 Tomcat） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- Undertow 服务器（采用 Java 开发的灵活的高性能 Web 服务器，提供包括阻塞和基于 NIO 的非堵塞机制） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-undertow</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Hibernate Validator（源于 JSR-303 的数据校验框架） -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
+        <!-- ################ 持久层相关 ################ -->
+        <!-- MyBatis Plus（MyBatis 的增强工具，在 MyBatis 的基础上只做增强不做改变，简化开发、提高效率） -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+
+        <!-- Dynamic Datasource（基于 Spring Boot 的快速集成多数据源的启动器） -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>${dynamic-ds.version}</version>
+        </dependency>
+
+        <!-- MySQL 驱动 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- P6Spy（SQL 性能分析组件） -->
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>${p6spy.version}</version>
+        </dependency>
+
+        <!-- Liquibase（用于管理数据库版本，跟踪、管理和应用数据库变化） -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
+        <!-- ################ 工具库相关 ################ -->
+        <!-- 第三方 Ip2region（离线 IP 数据管理框架和定位库，支持亿级别的数据段，10 微秒级别的查询性能，提供了许多主流编程语言的 xdb 数据管理引擎的实现） -->
+        <dependency>
+            <groupId>net.dreamlu</groupId>
+            <artifactId>mica-ip2region</artifactId>
+            <version>${ip2region.version}</version>
+        </dependency>
+
+        <!-- Spring Doc OpenAPI（可以结合 Spring Boot 使用的，基于 OpenAPI3 的 API 文档生成工具） -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${spring-doc.version}</version>
+        </dependency>
+        <!-- Knife4j（前身是 swagger-bootstrap-ui，集 Swagger2 和 OpenAPI3 为一体的增强解决方案） -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-springdoc-ui</artifactId>
+            <version>${knife4j.version}</version>
+        </dependency>
+
+        <!-- Hutool工具类库，参考文档：https://www.hutool.cn/docs/#/ -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+
+        <!-- Lombok（在 Java 开发过程中用注解的方式，简化了 JavaBean 的编写,避免了冗余和样板式代码而出现的插件,让编写的类更加简洁） -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>charles7c-api</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!-- 跳过单元测试 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- Maven 远程仓库配置 -->
+    <repositories>
+        <repository>
+            <id>huawei-cloud-maven</id>
+            <name>华为云公共仓库</name>
+            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>huawei-cloud-maven</id>
+            <name>华为云公共仓库</name>
+            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <!-- Maven 环境配置，在 IntelliJ IDEA 右侧 Maven 工具窗口可以快速切换环境  -->
+    <!--
+        为了 Spring Boot Profile 可以配合 Maven Profile 来选择不同配置文件进行启动，
+        Maven 环境标识需要和 Spring Boot 配置文件名后缀保持一致。
+        即：dev 对应 application-dev.yml、prod 对应 application-prod.yml
+    -->
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <!-- 环境标识 -->
+                <profiles.active>dev</profiles.active>
+                <logging.level>INFO</logging.level>
+            </properties>
+            <activation>
+                <!-- 默认环境 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <!-- 环境标识 -->
+                <profiles.active>prod</profiles.active>
+                <logging.level>INFO</logging.level>
+            </properties>
+        </profile>
+    </profiles>
+</project>

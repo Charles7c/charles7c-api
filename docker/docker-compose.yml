@@ -1,0 +1,51 @@
+version: '3'
+services:
+  mariadb:
+    container_name: mariadb
+    image: mariadb
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: 你的root用户密码
+      # 初始化数据库（后续的初始化 SQL 会在这个库执行）
+      MYSQL_DATABASE: charles7c_api
+      #MYSQL_USER: 你的数据库用户名
+      #MYSQL_PASSWORD: 你的数据库密码
+    ports:
+      - 3306:3306
+    volumes:
+      - /docker/mysql/:/var/lib/mysql
+    privileged: true
+  charles7c-api:
+    container_name: charles7c-api
+    build: ./charles7c-api
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+      DB_HOST: 172.17.0.1
+      DB_PORT: 3306
+      DB_USER: 你的数据库用户名
+      DB_PWD: 你的数据库密码
+    ports:
+      - 8000:8000
+    volumes:
+      - /docker/charles7c-api/logs:/logs
+    depends_on:
+      - mariadb
+    privileged: true
+  nginx:
+    container_name: nginx
+    image: nginx:1.22.1
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - /docker/nginx/logs:/var/log/nginx
+      - /docker/nginx/cert:/etc/nginx/cert
+    depends_on:
+      - charles7c-api
+    privileged: true

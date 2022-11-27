@@ -1,0 +1,77 @@
+### 服务器通用配置
+server:
+  servlet:
+    # 应用访问路径
+    context-path: /
+  ## Undertow 服务器配置
+  undertow:
+    # HTTP POST 请求内容的大小上限（默认 -1 不限制）
+    max-http-post-size: -1
+    # 以下的配置会影响 buffer，这些 buffer 会用于服务器连接的 IO 操作，有点类似 Netty 的池化内存管理
+    # 每块 buffer的空间大小（越小的空间被利用越充分，不要设置太大，以免影响其他应用，合适即可）
+    buffer-size: 512
+    # 是否分配的直接内存（NIO 直接分配的堆外内存）
+    direct-buffers: true
+    threads:
+      # 设置 IO 线程数，它主要执行非阻塞的任务，它们会负责多个连接（默认每个 CPU 核心一个线程）
+      io: 8
+      # 阻塞任务线程池，当执行类似 Servlet 请求阻塞操作，Undertow 会从这个线程池中取得线程（它的值设置取决于系统的负载）
+      worker: 256
+
+### Spring 通用配置
+spring:
+  ## 环境配置
+  profiles:
+    # 启用的环境
+    # 配合 Maven Profile 选择不同配置文件进行启动，在 IntelliJ IDEA 右侧 Maven 工具窗口可以快速切换环境
+    active: @profiles.active@
+  application:
+    name: ${system.appName}
+
+### MyBatis Plus
+mybatis-plus:
+    check-config-location: true
+    configuration:
+      map-underscore-to-camel-case: true
+    global-config:
+      db-config:
+        id-type: auto
+        logic-delete-value: 1
+        logic-not-delete-value: 0
+      banner: false
+    mapper-locations: classpath*:/mapper/**/*.xml
+
+--- ### 系统配置
+system:
+  # 项目名称
+  name: Charles7c API
+  # 应用名称
+  appName: charles7c-api
+  # 版本
+  version: 1.0.0
+  # 是否启用演示环境
+  demoEnabled: false
+  # 是否本地解析 IP 归属地
+  ipAddressLocalParseEnabled: true
+
+--- ### 日志配置
+logging:
+  level:
+    com.dcits: @logging.level@
+    org.springframework: warn
+  config: classpath:logback-spring.xml
+
+--- ### Swagger配置
+swagger:
+  info:
+    # 标题
+    title: '${system.name} 接口文档'
+    # 描述
+    description: ''
+    # 版本
+    version: ${system.version}
+    ## 联系人信息配置
+    contact:
+      name: Charles7c
+      url: https://blog.charles7c.top
+      email: charles7c@126.com
