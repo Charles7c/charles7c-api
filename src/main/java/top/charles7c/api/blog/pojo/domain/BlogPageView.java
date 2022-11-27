@@ -32,6 +32,10 @@ public class BlogPageView implements Serializable {
     private String address;
     /** 浏览器 */
     private String browser;
+    /** 访问次数 */
+    private Integer times;
     /** 创建时间 */
     private Date createTime;
+    /** 修改时间 */
+    private Date updateTime;
 }

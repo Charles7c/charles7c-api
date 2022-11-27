@@ -46,13 +46,31 @@ public class VisitorStatisticsServiceImpl implements VisitorStatisticsService {
         }
 
         // 记录页面访问
-        BlogPageView view = new BlogPageView();
-        view.setPageUrl(pageUrl);
-        view.setVisitorIp(ServletUtil.getClientIP(request));
-        view.setAddress(IpUtil.getCityInfo(view.getVisitorIp()));
-        view.setBrowser(BrowserUtil.getBrowser(request));
-        view.setCreateTime(new Date());
-        blogPageViewMapper.insert(view);
+        String visitorIp = ServletUtil.getClientIP(request);
+        String address = IpUtil.getCityInfo(visitorIp);
+        String browser = BrowserUtil.getBrowser(request);
+
+        BlogPageView view = blogPageViewMapper.selectOne(Wrappers.<BlogPageView>lambdaQuery()
+                .eq(BlogPageView::getPageUrl, pageUrl)
+                .eq(BlogPageView::getVisitorIp, visitorIp)
+                .eq(BlogPageView::getAddress, address)
+                .eq(BlogPageView::getBrowser, browser));
+
+        if (view == null) {
+            view = new BlogPageView();
+            view.setPageUrl(pageUrl);
+            view.setVisitorIp(ServletUtil.getClientIP(request));
+            view.setAddress(IpUtil.getCityInfo(view.getVisitorIp()));
+            view.setBrowser(BrowserUtil.getBrowser(request));
+            view.setTimes(1);
+            view.setCreateTime(new Date());
+            blogPageViewMapper.insert(view);
+        } else {
+            blogPageViewMapper.update(null, Wrappers.<BlogPageView>lambdaUpdate()
+                    .eq(BlogPageView::getId, view.getId())
+                    .set(BlogPageView::getTimes, view.getTimes() + 1)
+                    .set(BlogPageView::getUpdateTime, new Date()));
+        }
     }
 
     @Override
@@ -63,14 +81,33 @@ public class VisitorStatisticsServiceImpl implements VisitorStatisticsService {
 
         // 记录访问
         if (needRecord) {
-            BlogArticleView view = new BlogArticleView();
-            view.setArticleId(articleId);
-            view.setVisitorIp(ServletUtil.getClientIP(request));
-            view.setAddress(IpUtil.getCityInfo(view.getVisitorIp()));
-            view.setBrowser(BrowserUtil.getBrowser(request));
-            view.setPageUrl(pageUrl);
-            view.setCreateTime(new Date());
-            blogArticleViewMapper.insert(view);
+            String visitorIp = ServletUtil.getClientIP(request);
+            String address = IpUtil.getCityInfo(visitorIp);
+            String browser = BrowserUtil.getBrowser(request);
+
+            BlogArticleView view = blogArticleViewMapper.selectOne(Wrappers.<BlogArticleView>lambdaQuery()
+                    .eq(BlogArticleView::getArticleId, articleId)
+                    .eq(BlogArticleView::getVisitorIp, visitorIp)
+                    .eq(BlogArticleView::getAddress, address)
+                    .eq(BlogArticleView::getBrowser, browser)
+                    .eq(BlogArticleView::getPageUrl, pageUrl));
+
+            if (view == null) {
+                view = new BlogArticleView();
+                view.setArticleId(articleId);
+                view.setVisitorIp(visitorIp);
+                view.setAddress(address);
+                view.setBrowser(browser);
+                view.setTimes(1);
+                view.setPageUrl(pageUrl);
+                view.setCreateTime(new Date());
+                blogArticleViewMapper.insert(view);
+            } else {
+                blogArticleViewMapper.update(null, Wrappers.<BlogArticleView>lambdaUpdate()
+                        .eq(BlogArticleView::getId, view.getId())
+                        .set(BlogArticleView::getTimes, view.getTimes() + 1)
+                        .set(BlogArticleView::getUpdateTime, new Date()));
+            }
         }
 
         // 查询该文章的总阅读数

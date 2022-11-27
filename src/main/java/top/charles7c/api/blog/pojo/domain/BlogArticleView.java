@@ -34,6 +34,10 @@ public class BlogArticleView implements Serializable {
     private String browser;
     /** 页面URL */
     private String pageUrl;
+    /** 访问次数 */
+    private Integer times;
     /** 创建时间 */
     private Date createTime;
+    /** 修改时间 */
+    private Date updateTime;
 }
