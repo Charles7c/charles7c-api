@@ -40,7 +40,7 @@ public class VisitorStatisticsController {
     @Parameter(name = "pageUrl", description = "页面URL", in = ParameterIn.QUERY)
     @GetMapping("/article/view/{articleId}")
     public R<Long> getArticleViewCount(@PathVariable String articleId, @RequestParam String pageUrl) {
-        if (StrUtil.isBlank(pageUrl) || !HttpUtil.isHttp(pageUrl) || !HttpUtil.isHttps(pageUrl)) {
+        if (StrUtil.isBlank(pageUrl) || !(HttpUtil.isHttp(pageUrl) || HttpUtil.isHttps(pageUrl))) {
             throw new BadRequestException(SystemCodeEnum.PARAM_VALID_ERROR.getMsg());
         }
         return R.ok(visitorStatisticsService.getArticleViewCount(articleId, pageUrl));
