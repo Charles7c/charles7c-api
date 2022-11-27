@@ -159,32 +159,6 @@
         </plugins>
     </build>
 
-    <!-- Maven 远程仓库配置 -->
-    <repositories>
-        <repository>
-            <id>huawei-cloud-maven</id>
-            <name>华为云公共仓库</name>
-            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>huawei-cloud-maven</id>
-            <name>华为云公共仓库</name>
-            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
     <!-- Maven 环境配置，在 IntelliJ IDEA 右侧 Maven 工具窗口可以快速切换环境  -->
     <!--
         为了 Spring Boot Profile 可以配合 Maven Profile 来选择不同配置文件进行启动，

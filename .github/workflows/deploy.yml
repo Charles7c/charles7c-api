@@ -18,15 +18,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       # 2、安装 Java 环境
-      - name: Setup JDK
+      - name: Install Java
         uses: actions/setup-java@master
         with:
-          java-version: '8'
           distribution: 'adopt'
-          cache: maven
+          java-version: '8'
+          cache: 'maven'
       # 3、打包
       - name: Build
-        run: mvn clean package -DskipTests=true -P prod --file pom.xml
+        run: mvn -B package -DskipTests=true -P prod --file pom.xml
       # 4、拷贝 jar 包到服务器
       - name: Copy Jar
         uses: garygrossgarten/github-action-scp@release

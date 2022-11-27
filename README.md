@@ -1,7 +1,7 @@
 # Charles7c API
 
 ![Release](https://img.shields.io/badge/Release-V1.0.0-%23ff3f59.svg)
-[![License](https://img.shields.io/badge/源码%20License-MIT-blue.svg)](https://gitee.com/charles7c/charles7c-api/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/源码%20License-MIT-blue.svg)](https://github.com/Charles7c/charles7c-api/blob/main/LICENSE)
 
 ## 简介
 
@@ -39,8 +39,9 @@ git clone https://github.com/Charles7c/charles7c-api.git
 ## 已提供 API
 
 - [x] 获取文章阅读数
+- [x] 记录页面浏览量
 
 ## License
 
-- 遵循 [MIT](https://gitee.com/charles7c/charles7c-api/blob/main/LICENSE) 开源许可协议
+- 遵循 [MIT](https://github.com/Charles7c/charles7c-api/blob/main/LICENSE) 开源许可协议
 - Copyright © 2022-present Charles7c

@@ -75,3 +75,12 @@ swagger:
       name: Charles7c
       url: https://blog.charles7c.top
       email: charles7c@126.com
+
+--- ### 博客配置
+blog:
+  ## 访问配置
+  article.view:
+    # 排除路径列表
+    excludePaths:
+      - /archives
+      - /tags

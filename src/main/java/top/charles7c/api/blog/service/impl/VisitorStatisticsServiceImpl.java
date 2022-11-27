@@ -7,9 +7,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import top.charles7c.api.blog.mapper.VisitorStatisticsMapper;
-import top.charles7c.api.blog.pojo.domain.VisitorStatistics;
+import top.charles7c.api.blog.mapper.BlogArticleViewMapper;
+import top.charles7c.api.blog.mapper.BlogPageViewMapper;
+import top.charles7c.api.blog.pojo.domain.BlogArticleView;
+import top.charles7c.api.blog.pojo.domain.BlogPageView;
 import top.charles7c.api.blog.service.VisitorStatisticsService;
+import top.charles7c.api.config.properties.BlogProperties;
 import top.charles7c.api.util.BrowserUtil;
 import top.charles7c.api.util.CheckUtils;
 import top.charles7c.api.util.IpUtil;
@@ -30,37 +33,74 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class VisitorStatisticsServiceImpl implements VisitorStatisticsService {
 
-    private final VisitorStatisticsMapper visitorStatisticsMapper;
+    private final BlogPageViewMapper blogPageViewMapper;
+    private final BlogArticleViewMapper blogArticleViewMapper;
+    private final BlogProperties blogProperties;
 
     @Override
-    public Long getPv(String articleId) {
-        // 1、如果来源是内网 IP 或 本地，不记录访问
+    public void getPv(String pageUrl) {
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
+        boolean needRecord = this.checkNeedRecord(request);
+        if (!needRecord) {
+            return;
+        }
+
+        // 记录页面访问
+        BlogPageView view = new BlogPageView();
+        view.setPageUrl(pageUrl);
+        view.setVisitorIp(ServletUtil.getClientIP(request));
+        view.setAddress(IpUtil.getCityInfo(view.getVisitorIp()));
+        view.setBrowser(BrowserUtil.getBrowser(request));
+        view.setCreateTime(new Date());
+        blogPageViewMapper.insert(view);
+    }
+
+    @Override
+    public Long getArticleViewCount(String articleId, String pageUrl) {
+        HttpServletRequest request = RequestHolder.getHttpServletRequest();
+        boolean needRecord = this.checkNeedRecord(request)
+                && !blogProperties.getExcludePaths().contains(URLUtil.toURI(pageUrl).getPath());
+
+        // 记录访问
+        if (needRecord) {
+            BlogArticleView view = new BlogArticleView();
+            view.setArticleId(articleId);
+            view.setVisitorIp(ServletUtil.getClientIP(request));
+            view.setAddress(IpUtil.getCityInfo(view.getVisitorIp()));
+            view.setBrowser(BrowserUtil.getBrowser(request));
+            view.setPageUrl(pageUrl);
+            view.setCreateTime(new Date());
+            blogArticleViewMapper.insert(view);
+        }
+
+        // 查询该文章的总阅读数
+        return blogArticleViewMapper.selectCount(Wrappers.<BlogArticleView>query()
+                .select("DISTINCT `visitor_ip`")
+                .lambda()
+                .eq(BlogArticleView::getArticleId, articleId));
+    }
+
+    /**
+     * 检测是否需要记录访问
+     *
+     * @param request 请求信息
+     * @return 是否需要记录访问
+     */
+    private boolean checkNeedRecord(HttpServletRequest request) {
         // 获取访客 IP
         String visitorIp = ServletUtil.getClientIP(request);
         String address = IpUtil.getCityInfo(visitorIp);
+        if ("内网IP".equals(address)) {
+            return false;
+        }
+
         // 获取 referer
         String referer = ServletUtil.getHeader(request, "referer", StandardCharsets.UTF_8);
         CheckUtils.exceptionIfBlank(referer, "非法访问 referer");
         log.info("referer：{}", referer);
-        boolean needRecord = !("内网IP".equals(address) || StrUtil.containsAny(URLUtil.toURI(referer).getHost(), "localhost", "127.0.0.1", "192.168."));
-
-        // 2、记录访问
-        if (needRecord) {
-            VisitorStatistics visitorStatistics = new VisitorStatistics();
-            visitorStatistics.setArticleId(articleId);
-            visitorStatistics.setVisitorIp(visitorIp);
-            visitorStatistics.setAddress(address);
-            visitorStatistics.setBrowser(BrowserUtil.getBrowser(request));
-            visitorStatistics.setReferer(referer);
-            visitorStatistics.setCreateTime(new Date());
-            visitorStatisticsMapper.insert(visitorStatistics);
+        if (StrUtil.containsAny(URLUtil.toURI(referer).getHost(), "localhost", "127.0.0.1", "192.168.")) {
+            return false;
         }
-
-        // 3、查询该文章的总阅读数
-        return visitorStatisticsMapper.selectCount(Wrappers.<VisitorStatistics>query()
-                .select("DISTINCT `visitor_ip`")
-                .lambda()
-                .eq(VisitorStatistics::getArticleId, articleId));
+        return true;
     }
 }

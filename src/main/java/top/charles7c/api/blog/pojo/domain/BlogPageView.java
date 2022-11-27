@@ -10,30 +10,28 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 访客统计
+ * 页面浏览量
  *
  * @author Charles7c
- * @since 2022/7/28 23:45
+ * @since 2022/11/27 21:56
  */
 @Data
-@TableName("blog_visitor_statistics")
+@TableName("blog_page_view")
 @Accessors(chain = true)
 @ToString(callSuper = true)
-public class VisitorStatistics implements Serializable {
+public class BlogPageView implements Serializable {
 
     /** 主键 */
     @TableId
     private Long id;
-    /** 文章ID */
-    private String articleId;
+    /** 页面URL */
+    private String pageUrl;
     /** 访客IP */
     private String visitorIp;
     /** IP归属地 */
     private String address;
     /** 浏览器 */
     private String browser;
-    /** 来源 */
-    private String referer;
     /** 创建时间 */
     private Date createTime;
 }
