@@ -35,7 +35,7 @@ public class VisitorStatisticsController {
         return R.ok();
     }
 
-    @Operation(summary = "获取文章阅读数")
+    @Operation(summary = "查询文章阅读数")
     @Parameter(name = "articleId", description = "文章ID", in = ParameterIn.PATH)
     @Parameter(name = "pageUrl", description = "页面URL", in = ParameterIn.QUERY)
     @GetMapping("/article/view/{articleId}")

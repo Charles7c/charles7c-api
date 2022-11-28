@@ -59,9 +59,9 @@ public class VisitorStatisticsServiceImpl implements VisitorStatisticsService {
         if (view == null) {
             view = new BlogPageView();
             view.setPageUrl(pageUrl);
-            view.setVisitorIp(ServletUtil.getClientIP(request));
-            view.setAddress(IpUtil.getCityInfo(view.getVisitorIp()));
-            view.setBrowser(BrowserUtil.getBrowser(request));
+            view.setVisitorIp(visitorIp);
+            view.setAddress(address);
+            view.setBrowser(browser);
             view.setTimes(1);
             view.setCreateTime(new Date());
             blogPageViewMapper.insert(view);

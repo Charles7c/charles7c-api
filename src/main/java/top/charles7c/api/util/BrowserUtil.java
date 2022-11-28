@@ -2,6 +2,7 @@ package top.charles7c.api.util;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentInfo;
 import cn.hutool.http.useragent.UserAgentUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +25,11 @@ public class BrowserUtil {
         if (request == null) {
             return null;
         }
-        UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
+        String userAgentHeader = request.getHeader("User-Agent");
+        UserAgent userAgent = UserAgentUtil.parse(userAgentHeader);
+        if (UserAgentInfo.NameUnknown.equals(userAgent.getBrowser().getName())) {
+            return userAgentHeader;
+        }
         return StrUtil.format("{} {}", userAgent.getBrowser().getName(), userAgent.getVersion());
     }
 

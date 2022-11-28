@@ -16,7 +16,7 @@ public interface VisitorStatisticsService {
     void getPv(String pageUrl);
 
     /**
-     * 记录, 并获取文章阅读数
+     * 记录, 并查询文章阅读数
      *
      * @param articleId 文章ID
      * @param pageUrl   页面URL
