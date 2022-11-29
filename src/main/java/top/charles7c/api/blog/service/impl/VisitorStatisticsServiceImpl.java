@@ -49,12 +49,14 @@ public class VisitorStatisticsServiceImpl implements VisitorStatisticsService {
         String visitorIp = ServletUtil.getClientIP(request);
         String address = IpUtil.getCityInfo(visitorIp);
         String browser = BrowserUtil.getBrowser(request);
+        String referer = ServletUtil.getHeader(request, "referer", StandardCharsets.UTF_8);
 
         BlogPageView view = blogPageViewMapper.selectOne(Wrappers.<BlogPageView>lambdaQuery()
                 .eq(BlogPageView::getPageUrl, pageUrl)
                 .eq(BlogPageView::getVisitorIp, visitorIp)
                 .eq(BlogPageView::getAddress, address)
-                .eq(BlogPageView::getBrowser, browser));
+                .eq(BlogPageView::getBrowser, browser)
+                .eq(BlogPageView::getReferer, referer));
 
         if (view == null) {
             view = new BlogPageView();
@@ -62,6 +64,7 @@ public class VisitorStatisticsServiceImpl implements VisitorStatisticsService {
             view.setVisitorIp(visitorIp);
             view.setAddress(address);
             view.setBrowser(browser);
+            view.setReferer(referer);
             view.setTimes(1);
             view.setCreateTime(new Date());
             blogPageViewMapper.insert(view);
@@ -84,13 +87,15 @@ public class VisitorStatisticsServiceImpl implements VisitorStatisticsService {
             String visitorIp = ServletUtil.getClientIP(request);
             String address = IpUtil.getCityInfo(visitorIp);
             String browser = BrowserUtil.getBrowser(request);
+            String referer = ServletUtil.getHeader(request, "referer", StandardCharsets.UTF_8);
 
             BlogArticleView view = blogArticleViewMapper.selectOne(Wrappers.<BlogArticleView>lambdaQuery()
                     .eq(BlogArticleView::getArticleId, articleId)
                     .eq(BlogArticleView::getVisitorIp, visitorIp)
                     .eq(BlogArticleView::getAddress, address)
                     .eq(BlogArticleView::getBrowser, browser)
-                    .eq(BlogArticleView::getPageUrl, pageUrl));
+                    .eq(BlogArticleView::getPageUrl, pageUrl)
+                    .eq(BlogArticleView::getReferer, referer));
 
             if (view == null) {
                 view = new BlogArticleView();
@@ -98,6 +103,7 @@ public class VisitorStatisticsServiceImpl implements VisitorStatisticsService {
                 view.setVisitorIp(visitorIp);
                 view.setAddress(address);
                 view.setBrowser(browser);
+                view.setReferer(referer);
                 view.setTimes(1);
                 view.setPageUrl(pageUrl);
                 view.setCreateTime(new Date());
