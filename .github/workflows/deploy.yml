@@ -47,6 +47,4 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
             cd /docker
-            docker stop charles7c-api && docker rm charles7c-api
-            docker rmi docker_charles7c-api
-            docker-compose up charles7c-api -d
+            docker-compose up --force-recreate --build -d charles7c-api

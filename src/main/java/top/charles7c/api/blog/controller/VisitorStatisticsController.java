@@ -32,7 +32,7 @@ public class VisitorStatisticsController {
     @GetMapping("/pv")
     public R getPv(@RequestParam String pageUrl) {
         visitorStatisticsService.getPv(pageUrl);
-        return R.ok(1);
+        return R.ok();
     }
 
     @Operation(summary = "查询文章阅读数")
